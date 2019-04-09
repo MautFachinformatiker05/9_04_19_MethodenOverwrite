@@ -1,10 +1,11 @@
 package application;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.shape.Line;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 
 public class Main extends Application {
 	@Override
@@ -17,20 +18,15 @@ public class Main extends Application {
 			double xKor = 200;
 			double yKor = 200;
 			double radius = 30;
-			Line[] punkt = new Line[1441];
-			int a = 0;
+			Path pfad = new Path();
+			pfad.getElements().add(new MoveTo(xKor + Math.sin(0) * radius, yKor + Math.cos(0) * radius));
 			for (double i = 0; i < 4 * 2 * Math.PI; i += 2 * Math.PI / 360) {
 				dX = Math.sin(i) * radius;
 				dY = Math.cos(i) * radius;
-				punkt[a] = new Line();
-				punkt[a].setStartX(dX + xKor);
-				punkt[a].setStartY(dY + yKor);
-				punkt[a].setEndX(dX + xKor);
-				punkt[a].setEndY(dY + yKor);
-				a++;
+				pfad.getElements().add(new LineTo(dX + xKor, dY + yKor));
 				radius += 0.1;
 			}
-			root.getChildren().addAll(punkt);
+			root.getChildren().add(pfad);
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (Exception e) {
