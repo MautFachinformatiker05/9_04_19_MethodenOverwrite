@@ -6,11 +6,13 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
@@ -19,19 +21,19 @@ import javafx.stage.Stage;
 public class MainWithSliders extends Application {
 
 	private DoubleProperty eckigkeit = new SimpleDoubleProperty();			// je größer, desto eckiger
-    public final double getEckigkeit(){return eckigkeit.get();}
-    public final void setEckigkeit(double value){eckigkeit.set(value);}
-    public DoubleProperty EckigkeitProperty() {return eckigkeit;}
+	public final double getEckigkeit(){return eckigkeit.get();}
+	public final void setEckigkeit(double value){eckigkeit.set(value);}
+	public DoubleProperty EckigkeitProperty() {return eckigkeit;}
 
-    private DoubleProperty feinheit = new SimpleDoubleProperty();			// je kleiner, desto feiner
-    public final double getFeinheit(){return feinheit.get();}
-    public final void setFeinheit(double value){feinheit.set(value);}
-    public DoubleProperty FeinheitProperty() {return feinheit;}
+	private DoubleProperty feinheit = new SimpleDoubleProperty();			// je kleiner, desto feiner
+	public final double getFeinheit(){return feinheit.get();}
+	public final void setFeinheit(double value){feinheit.set(value);}
+	public DoubleProperty FeinheitProperty() {return feinheit;}
 
-    private DoubleProperty stärke = new SimpleDoubleProperty();			 // Stärke des Striches
-    public final double getStärke(){return stärke.get();}
-    public final void setStärke(double value){stärke.set(value);}
-    public DoubleProperty StärkeProperty() {return stärke;}
+	private DoubleProperty stärke = new SimpleDoubleProperty();			 // Stärke des Striches
+	public final double getStärke(){return stärke.get();}
+	public final void setStärke(double value){stärke.set(value);}
+	public DoubleProperty StärkeProperty() {return stärke;}
 
 	int limit = 1000;
 	double startX = 0;
@@ -39,11 +41,12 @@ public class MainWithSliders extends Application {
 	double endX = 450;
 	double endY = 450;
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,900,900);
+			Scene scene = new Scene(root,900,900,false,SceneAntialiasing.BALANCED);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			Stage newWindow = new Stage();
@@ -57,58 +60,61 @@ public class MainWithSliders extends Application {
 			Scene scene2 = new Scene(vbox,410,155);
 			newWindow.setScene(scene2);
 			newWindow.setX(primaryStage.getX() + 700);
-            newWindow.setY(primaryStage.getY() + 100);
+			newWindow.setY(primaryStage.getY() + 100);
 
-            setEckigkeit(0.1);
-            setFeinheit(0.5);
-            setStärke(5);
+			setEckigkeit(0.1);
+			setFeinheit(0.5);
+			setStärke(5);
 
-            Label lb1 = new Label();
-            lb1.setText("Eckigkeit");
-            Label lb2 = new Label();
-            lb2.setText("Zoom    ");
-            Label lb3 = new Label();
-            lb3.setText("Stärke   ");
+			Label lb1 = new Label();
+			lb1.setText("Eckigkeit");
+			Label lb2 = new Label();
+			lb2.setText("Zoom    ");
+			Label lb3 = new Label();
+			lb3.setText("Stärke   ");
 
-            Slider sl1 = new Slider(0.01, 2, 0.1);
-            sl1.setShowTickMarks(true);
-    		sl1.setShowTickLabels(true);
-    		sl1.setMajorTickUnit(0.2f);
-    		sl1.setBlockIncrement(0.005f);
-    		sl1.setPrefWidth(350);
+			Slider sl1 = new Slider(0.01, 2, 0.1);
+			sl1.setShowTickMarks(true);
+			sl1.setShowTickLabels(true);
+			sl1.setMajorTickUnit(0.2f);
+			sl1.setBlockIncrement(0.005f);
+			sl1.setPrefWidth(350);
 
-    		Slider sl2 = new Slider(0.01, 2, 0.5);
-            sl2.setShowTickMarks(true);
-    		sl2.setShowTickLabels(true);
-    		sl2.setMajorTickUnit(0.2f);
-    		sl2.setBlockIncrement(0.005f);
-    		sl2.setPrefWidth(350);
-    		Slider sl3 = new Slider(0.01, 30, 5);
-            sl3.setShowTickMarks(true);
-    		sl3.setShowTickLabels(true);
-    		sl3.setMajorTickUnit(5f);
-    		sl3.setBlockIncrement(1f);
-    		sl3.setPrefWidth(350);
+			Slider sl2 = new Slider(0.01, 2, 0.5);
+			sl2.setShowTickMarks(true);
+			sl2.setShowTickLabels(true);
+			sl2.setMajorTickUnit(0.2f);
+			sl2.setBlockIncrement(0.005f);
+			sl2.setPrefWidth(350);
+			Slider sl3 = new Slider(0.01, 30, 5);
+			sl3.setShowTickMarks(true);
+			sl3.setShowTickLabels(true);
+			sl3.setMajorTickUnit(5f);
+			sl3.setBlockIncrement(1f);
+			sl3.setPrefWidth(350);
 
-    		hbox1.getChildren().addAll(lb1,sl1);
-    		hbox2.getChildren().addAll(lb2,sl2);
-    		hbox3.getChildren().addAll(lb3,sl3);
+			hbox1.setHgrow(sl1, Priority.ALWAYS);
+			hbox2.setHgrow(sl2, Priority.ALWAYS);
+			hbox3.setHgrow(sl3, Priority.ALWAYS);
+			hbox1.getChildren().addAll(lb1,sl1);
+			hbox2.getChildren().addAll(lb2,sl2);
+			hbox3.getChildren().addAll(lb3,sl3);
 
-    		eckigkeit.bind(sl1.valueProperty());
-    		feinheit.bind(sl2.valueProperty());
-    		stärke.bind(sl3.valueProperty());
+			eckigkeit.bind(sl1.valueProperty());
+			feinheit.bind(sl2.valueProperty());
+			stärke.bind(sl3.valueProperty());
 
-            newWindow.show();
-            spiraleBerechnen(root);
-            primaryStage.show();
+			newWindow.show();
+			spiraleBerechnen(root);
+			primaryStage.show();
 
-            btn.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    root.getChildren().clear();
-                    spiraleBerechnen(root);
-                }
-            });
+			btn.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event) {
+					root.getChildren().clear();
+					spiraleBerechnen(root);
+				}
+			});
 
 		} catch(Exception e) {
 			e.printStackTrace();
