@@ -3,6 +3,8 @@ package application;
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -10,6 +12,7 @@ import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -54,9 +57,7 @@ public class MainWithSliders extends Application {
 			HBox hbox1 = new HBox(2);
 			HBox hbox2 = new HBox(2);
 			HBox hbox3 = new HBox(2);
-			Button btn = new Button();
-			btn.setText("                                               Rendern!                                                       ");
-			vbox.getChildren().addAll(hbox1,hbox2,hbox3,btn);
+			vbox.getChildren().addAll(hbox1,hbox2,hbox3);
 			Scene scene2 = new Scene(vbox,410,155);
 			newWindow.setScene(scene2);
 			newWindow.setX(primaryStage.getX() + 700);
@@ -108,13 +109,33 @@ public class MainWithSliders extends Application {
 			spiraleBerechnen(root);
 			primaryStage.show();
 
-			btn.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event) {
+			sl1.valueProperty().addListener(new ChangeListener<Number>() {
+
+				public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
 					root.getChildren().clear();
 					spiraleBerechnen(root);
 				}
+
 			});
+
+			sl2.valueProperty().addListener(new ChangeListener<Number>() {
+
+				public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
+					root.getChildren().clear();
+					spiraleBerechnen(root);
+				}
+
+			});
+
+			sl3.valueProperty().addListener(new ChangeListener<Number>() {
+
+				public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
+					root.getChildren().clear();
+					spiraleBerechnen(root);
+				}
+
+			});
+
 
 		} catch(Exception e) {
 			e.printStackTrace();
