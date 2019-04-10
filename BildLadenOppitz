@@ -1,0 +1,40 @@
+package application;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
+
+/*from   w w w. j a  v  a  2s  . c o m*/
+public class Main extends Application {
+	@Override
+	public void start(Stage primaryStage) throws FileNotFoundException {
+
+		File file = new File(getClass().getClassLoader().getResource("Tiger.png").getFile());
+		Image tiger = new Image(new FileInputStream(file));
+		Circle c1 = new Circle(100, 100, 75);
+		c1.setFill(new ImagePattern(tiger, 0, 0, 1, 1, true));
+		c1.setStroke(Color.RED);
+		HBox hbox = new HBox();
+		hbox.setAlignment(Pos.CENTER);
+
+		hbox.getChildren().add(c1);
+		Scene scene = new Scene(hbox, 320, 112, Color.rgb(0, 0, 0, 0));
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
