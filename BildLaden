@@ -1,0 +1,65 @@
+package application;
+
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+
+/*from  ww  w  .jav  a 2  s  .c  om*/
+public class Main extends Application {
+	private static final String TigerURL = "file:Tiger.png";
+
+	@Override
+	public void start(Stage primaryStage) {
+		Group root = new Group();
+		Scene scene = new Scene(root, 300, 250);
+		// 5 pixels space between child nodes
+		VBox vbox = new VBox(15);
+		// 1 pixel padding between child nodes only
+		vbox.setPadding(new Insets(12));
+		Rectangle r1 = new Rectangle(10, 10);
+		Rectangle r2 = new Rectangle(20, 100);
+		Rectangle r3 = new Rectangle(50, 20);
+		Rectangle r4 = new Rectangle(20, 50);
+		Circle c1 = new Circle(20, 30, 50, Color.BROWN);
+		HBox h1 = new HBox(1);
+
+		Circle hc1 = new Circle(20, 70, 20, Color.ROSYBROWN);
+		Circle hc2 = new Circle(80, 70, 30, Color.FIREBRICK);
+		Circle hc3 = new Circle(120, 70, 50, Color.DEEPPINK);
+
+		System.out.println(System.getProperty("user.dir"));
+		Image tiger = new Image(TigerURL);
+		hc3.setFill(new ImagePattern(tiger, 0, 0, 1, 1, true));
+
+		hc3.setStroke(Color.BLACK);
+		h1.getChildren().addAll(hc1, hc2, hc3);
+		h1.setAlignment(Pos.CENTER);
+
+		Polygon p1 = new Polygon(0, 0, 0, 10, 10, 10, 10, 0);
+		p1.setFill(Color.DARKGRAY);
+		vbox.setAlignment(Pos.CENTER);
+
+		HBox.setMargin(r1, new Insets(2, 2, 2, 2));
+
+		vbox.getChildren().addAll(p1, c1, r1, h1, r2, r3, r4);
+		root.getChildren().add(vbox);
+
+		primaryStage.setScene(scene);
+		primaryStage.show();
+	}
+
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
