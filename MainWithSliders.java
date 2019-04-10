@@ -116,6 +116,7 @@ public class MainWithSliders extends Application {
 	}
 
 	public void spiraleBerechnen(BorderPane root) {
+		limit = (int) (eckigkeit.get()*1500);
 		for (double i = 1; i < limit-1; i+=eckigkeit.get()) {
 			startX = endX;
 			startY = endY;
