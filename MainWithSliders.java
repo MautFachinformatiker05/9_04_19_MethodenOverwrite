@@ -5,14 +5,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -23,123 +19,111 @@ import javafx.stage.Stage;
 
 public class MainWithSliders extends Application {
 
-	private DoubleProperty eckigkeit = new SimpleDoubleProperty();			// je größer, desto eckiger
-	public final double getEckigkeit(){return eckigkeit.get();}
-	public final void setEckigkeit(double value){eckigkeit.set(value);}
-	public DoubleProperty EckigkeitProperty() {return eckigkeit;}
+	private DoubleProperty eckigkeit = new SimpleDoubleProperty();			// je größer, desto eckiger die Spirale
 
-	private DoubleProperty feinheit = new SimpleDoubleProperty();			// je kleiner, desto feiner
-	public final double getFeinheit(){return feinheit.get();}
-	public final void setFeinheit(double value){feinheit.set(value);}
-	public DoubleProperty FeinheitProperty() {return feinheit;}
+	private DoubleProperty feinheit = new SimpleDoubleProperty();			// je kleiner, desto weiter entfernt
 
 	private DoubleProperty stärke = new SimpleDoubleProperty();			 // Stärke des Striches
-	public final double getStärke(){return stärke.get();}
-	public final void setStärke(double value){stärke.set(value);}
-	public DoubleProperty StärkeProperty() {return stärke;}
 
-	int limit = 1000;
+	int limit = 1000;			// Deklarieren von Variablen
 	double startX = 0;
 	double startY = 0;
 	double endX = 450;
 	double endY = 450;
 
-	@SuppressWarnings("static-access")
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,900,900,false,SceneAntialiasing.BALANCED);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			Scene scene = new Scene(root,900,900,false,SceneAntialiasing.BALANCED);	// erstes Fenster
 			primaryStage.setScene(scene);
-			Stage newWindow = new Stage();
-			VBox vbox = new VBox(5);
+			Stage newWindow = new Stage();				// neues Fenster
+			VBox vbox = new VBox(5);									  // deklarieren von V- und HBoxen
 			HBox hbox1 = new HBox(2);
 			HBox hbox2 = new HBox(2);
 			HBox hbox3 = new HBox(2);
-			vbox.getChildren().addAll(hbox1,hbox2,hbox3);
+			vbox.getChildren().addAll(hbox1,hbox2,hbox3);	// VBox enthält die HBoxen
 			Scene scene2 = new Scene(vbox,410,155);
 			newWindow.setScene(scene2);
 			newWindow.setX(primaryStage.getX() + 700);
 			newWindow.setY(primaryStage.getY() + 100);
 
-			setEckigkeit(0.1);
-			setFeinheit(0.5);
-			setStärke(5);
+			eckigkeit.set(0.1);		// Festlegen von Anfangswerten
+			feinheit.set(0.5);
+			stärke.set(5);
 
-			Label lb1 = new Label();
-			lb1.setText("Eckigkeit");
+			Label lb1 = new Label();	// Erstellen der Labels
 			Label lb2 = new Label();
-			lb2.setText("Zoom    ");
 			Label lb3 = new Label();
-			lb3.setText("Stärke   ");
 
-			Slider sl1 = new Slider(0.01, 2, 0.1);
-			sl1.setShowTickMarks(true);
-			sl1.setShowTickLabels(true);
-			sl1.setMajorTickUnit(0.2f);
-			sl1.setBlockIncrement(0.005f);
-			sl1.setPrefWidth(350);
+
+			Slider sl1 = new Slider(0.01, 2, 0.1);	// Erstellen der Slider
+			configure1(hbox1, lb1, sl1);	// Einstellungen für HBox und ihre Label und Slider
 
 			Slider sl2 = new Slider(0.01, 2, 0.5);
-			sl2.setShowTickMarks(true);
-			sl2.setShowTickLabels(true);
-			sl2.setMajorTickUnit(0.2f);
-			sl2.setBlockIncrement(0.005f);
-			sl2.setPrefWidth(350);
+			configure2(hbox2, lb2, sl2);
+
 			Slider sl3 = new Slider(0.01, 30, 5);
-			sl3.setShowTickMarks(true);
-			sl3.setShowTickLabels(true);
-			sl3.setMajorTickUnit(5f);
-			sl3.setBlockIncrement(1f);
-			sl3.setPrefWidth(350);
+			configure3(hbox3, lb3, sl3);
 
-			hbox1.setHgrow(sl1, Priority.ALWAYS);
-			hbox2.setHgrow(sl2, Priority.ALWAYS);
-			hbox3.setHgrow(sl3, Priority.ALWAYS);
-			hbox1.getChildren().addAll(lb1,sl1);
-			hbox2.getChildren().addAll(lb2,sl2);
-			hbox3.getChildren().addAll(lb3,sl3);
-
-			eckigkeit.bind(sl1.valueProperty());
+			eckigkeit.bind(sl1.valueProperty());	// zusammenkleben von Slider und Property
 			feinheit.bind(sl2.valueProperty());
 			stärke.bind(sl3.valueProperty());
 
-			newWindow.show();
-			spiraleBerechnen(root);
-			primaryStage.show();
+			newWindow.show();			// rendern des zweiten Fensters
+			spiraleBerechnen(root);										// Berechnung der Spirale für erstes Fenster
+			primaryStage.show();		// rendern des ersten Fensters
 
-			sl1.valueProperty().addListener(new ChangeListener<Number>() {
-
-				public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
-					root.getChildren().clear();
-					spiraleBerechnen(root);
-				}
-
-			});
-
-			sl2.valueProperty().addListener(new ChangeListener<Number>() {
-
-				public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
-					root.getChildren().clear();
-					spiraleBerechnen(root);
-				}
-
-			});
-
-			sl3.valueProperty().addListener(new ChangeListener<Number>() {
-
-				public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
-					root.getChildren().clear();
-					spiraleBerechnen(root);
-				}
-
-			});
-
+			addListenerToSlider(root, sl1);	// Wenn sich der Wert des Sliders ändert, wird die Spirale neu berechnet
+			addListenerToSlider(root, sl2);
+			addListenerToSlider(root, sl3);
 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public void addListenerToSlider(BorderPane root, Slider sl) {
+		sl.valueProperty().addListener(new ChangeListener<Number>() {
+
+			public void changed(ObservableValue<? extends Number> ov,Number old_val, Number new_val) {
+				root.getChildren().clear();	// Löschen der vorherigen Spirale
+				spiraleBerechnen(root);
+			}
+
+		});
+	}
+	@SuppressWarnings("static-access")
+	public void configure3(HBox hbox3, Label lb3, Slider sl3) {
+		sl3.setShowTickMarks(true);
+		sl3.setShowTickLabels(true);
+		sl3.setMajorTickUnit(5f);
+		sl3.setBlockIncrement(1f);
+		sl3.setPrefWidth(350);
+		hbox3.setHgrow(sl3, Priority.ALWAYS);
+		lb3.setText("Stärke   ");
+		hbox3.getChildren().addAll(lb3,sl3);
+	}
+	@SuppressWarnings("static-access")
+	public void configure2(HBox hbox2, Label lb2, Slider sl2) {
+		sl2.setShowTickMarks(true);
+		sl2.setShowTickLabels(true);
+		sl2.setMajorTickUnit(0.2f);
+		sl2.setBlockIncrement(0.005f);
+		sl2.setPrefWidth(350);
+		hbox2.setHgrow(sl2, Priority.ALWAYS);
+		lb2.setText("Zoom    ");
+		hbox2.getChildren().addAll(lb2,sl2);
+	}
+	@SuppressWarnings("static-access")
+	public void configure1(HBox hbox1, Label lb1, Slider sl1) {
+		sl1.setShowTickMarks(true);
+		sl1.setShowTickLabels(true);
+		sl1.setMajorTickUnit(0.2f);
+		sl1.setBlockIncrement(0.005f);
+		sl1.setPrefWidth(350);
+		hbox1.setHgrow(sl1, Priority.ALWAYS);
+		lb1.setText("Eckigkeit");
+		hbox1.getChildren().addAll(lb1,sl1);
 	}
 
 	public void spiraleBerechnen(BorderPane root) {
